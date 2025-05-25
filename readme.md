@@ -12,7 +12,7 @@ CA Launcher is a user-friendly application designed to help users manage and lau
 
 ## Project Launcher Windows App
 ```
-https://github.com/Zubair-A-Davids/CA-Launcher/tree/dc01469e998153ddd78c7e30089f6aeb7bf89083/dist
+https://github.com/Zubair-A-Davids/CA-Launcher/tree/dc01469e998153ddd78c7e30089f6aeb7bf89083/Launcher
 ```
 
 ## Installation
