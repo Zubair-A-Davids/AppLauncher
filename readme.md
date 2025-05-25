@@ -1,6 +1,6 @@
-# Portable App Launcher
+# CA Launcher
 
-**Portable App Launcher** is a user-friendly application that allows you to save shortcuts of your frequently used files or scripts and access them conveniently from a single interface.
+**Compact App Launcher** is a user-friendly application that allows you to save shortcuts of your frequently used files or scripts and access them conveniently from a single interface.
 
 ## Features
 
