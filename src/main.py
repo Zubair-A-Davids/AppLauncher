@@ -1,9 +1,17 @@
-# filepath: c:\Users\zdavi\OneDrive\Documents\GitHub\CA-Launcher\src\main.py
 import tkinter as tk
 from tkinter import filedialog, simpledialog, messagebox
 import subprocess
 import os
 import json
+import sys
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 ITEMS_FILE = "items.json"
 APP_VERSION = "1.0.0"
@@ -11,9 +19,17 @@ APP_VERSION = "1.0.0"
 root = tk.Tk()
 root.title("CA Launcher")
 root.geometry("600x400")
-root.iconbitmap("icons/icon.ico")
+root.iconbitmap(resource_path("icons/icon.ico"))
 
 selected_item = None  # Track selected item globally
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def add_file():
     window = tk.Toplevel(root)
