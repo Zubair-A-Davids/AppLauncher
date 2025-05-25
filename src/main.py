@@ -1,3 +1,4 @@
+# filepath: c:\Users\zdavi\OneDrive\Documents\GitHub\CA-Launcher\src\main.py
 import tkinter as tk
 from tkinter import filedialog, simpledialog, messagebox
 import subprocess
@@ -10,6 +11,7 @@ APP_VERSION = "1.0.0"
 root = tk.Tk()
 root.title("CA Launcher")
 root.geometry("600x400")
+root.iconbitmap("icons/icon.ico")
 
 selected_item = None  # Track selected item globally
 
@@ -430,4 +432,3 @@ menubar.add_cascade(label="Menu", menu=help_menu)
 root.config(menu=menubar)
 
 root.mainloop()
-
