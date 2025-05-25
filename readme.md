@@ -35,7 +35,3 @@ pyinstaller --onefile --windowed main.py
 ```
 
 The executable will be located in the `dist` folder.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
