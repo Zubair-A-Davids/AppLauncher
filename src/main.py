@@ -14,7 +14,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 ITEMS_FILE = "items.json"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 
 root = tk.Tk()
 root.title("CA Launcher")
@@ -155,11 +155,24 @@ def select_item(event):
     if not frame_item:
         return
 
+    # Reset previous selection
     if selected_item and selected_item != frame_item:
         selected_item.config(bg="SystemButtonFace")
+        if hasattr(selected_item, "icon_label") and selected_item.icon_label:
+            selected_item.icon_label.config(bg="SystemButtonFace")
+        if hasattr(selected_item, "name_label"):
+            selected_item.name_label.config(bg="SystemButtonFace")
+        if hasattr(selected_item, "desc_label"):
+            selected_item.desc_label.config(bg="SystemButtonFace")
 
     selected_item = frame_item
     selected_item.config(bg="#ADD8E6")
+    if hasattr(selected_item, "icon_label") and selected_item.icon_label:
+        selected_item.icon_label.config(bg="#ADD8E6")
+    if hasattr(selected_item, "name_label"):
+        selected_item.name_label.config(bg="#ADD8E6")
+    if hasattr(selected_item, "desc_label"):
+        selected_item.desc_label.config(bg="#ADD8E6")
 
 def add_to_list(file_path, custom_name, description, icon_path=None):
     frame_item = tk.Frame(scrollable_frame, bg="SystemButtonFace", borderwidth=1, relief="solid")
@@ -169,29 +182,33 @@ def add_to_list(file_path, custom_name, description, icon_path=None):
     if not icon_path or not os.path.exists(icon_path):
         icon_path = default_icon_path
 
-    # Limit icon size for performance
     icon_image = None
+    icon_label = None
     if os.path.exists(icon_path):
         try:
             icon_image = tk.PhotoImage(file=icon_path)
-            # Resize if needed (for PNG only)
             if icon_image.width() > 32 or icon_image.height() > 32:
                 icon_image = icon_image.subsample(
                     max(1, icon_image.width() // 32),
                     max(1, icon_image.height() // 32)
                 )
-            icon_label = tk.Label(frame_item, image=icon_image)
+            icon_label = tk.Label(frame_item, image=icon_image, bg="SystemButtonFace")
             icon_label.image = icon_image
             icon_label.grid(row=0, column=0, padx=5, sticky="w")
         except Exception as e:
             print(f"Warning: Could not load icon '{icon_path}': {e}")
 
     display_name = custom_name if custom_name else os.path.basename(file_path)
-    name_label = tk.Label(frame_item, text=display_name, anchor="w", cursor="hand2", font=("Arial", 16))
+    name_label = tk.Label(frame_item, text=display_name, anchor="w", cursor="hand2", font=("Arial", 16), bg="SystemButtonFace")
     name_label.grid(row=0, column=1, sticky="w", padx=(0, 10))
 
-    desc_label = tk.Label(frame_item, text=description if description else "", anchor="e", font=("Arial", 16))
+    desc_label = tk.Label(frame_item, text=description if description else "", anchor="e", font=("Arial", 16), bg="SystemButtonFace")
     desc_label.grid(row=0, column=2, sticky="e")
+
+    # Store label references for highlighting
+    frame_item.icon_label = icon_label
+    frame_item.name_label = name_label
+    frame_item.desc_label = desc_label
 
     frame_item.grid_columnconfigure(1, weight=1)
     frame_item.grid_columnconfigure(2, weight=1)
@@ -212,6 +229,12 @@ def add_to_list(file_path, custom_name, description, icon_path=None):
     frame_item.bind("<Button-3>", lambda e: menu.post(e.x_root, e.y_root))
     name_label.bind("<Button-3>", lambda e: menu.post(e.x_root, e.y_root))
     desc_label.bind("<Button-3>", lambda e: menu.post(e.x_root, e.y_root))
+
+    _bind_mousewheel(frame_item)
+    if icon_label:
+        _bind_mousewheel(icon_label)
+    _bind_mousewheel(name_label)
+    _bind_mousewheel(desc_label)
 
 def save_item(file_path, custom_name, description, icon_path):
     try:
@@ -348,7 +371,7 @@ def show_about():
         "Technologies Used:\n"
         "• Python 3\n"
         "• Tkinter (for the GUI)\n\n"
-        "► zdavids112@gmail.com's First Python Project\n"
+        "► Zubair.Davids@outlook.com : Python Project ONE\n"
     )
     about_win = tk.Toplevel(root)
     about_win.title("About CA Launcher")
@@ -436,6 +459,17 @@ def on_frame_configure(event):
 
 scrollable_frame.bind("<Configure>", on_frame_configure)
 canvas.bind("<Configure>", on_frame_configure)
+
+def _on_mousewheel(event):
+    # For Windows
+    canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
+# Bind mousewheel to all widgets inside scrollable_frame
+def _bind_mousewheel(widget):
+    widget.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_mousewheel))
+    widget.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
+
+_bind_mousewheel(scrollable_frame)
 
 load_items()
 add_file_button.pack(pady=5)
